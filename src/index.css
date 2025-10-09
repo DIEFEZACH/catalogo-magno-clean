@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+/* === Tokens de marca (ajusta con los valores del manual) === */
+@theme {
+  /* Tipografías */
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+
+  /* Colores corporativos (sustituye si tu manual indica otros) */
+  --color-brand-50:  #eaf7f4;
+  --color-brand-100: #d6eee9;
+  --color-brand-200: #aee0d6;
+  --color-brand-300: #7dd1c1;
+  --color-brand-400: #49bfa9;
+  --color-brand-500: #00A7B5; /* Primario (teal del logo) */
+  --color-brand-600: #0e8f78; /* Hover / énfasis */
+  --color-brand-700: #0a7764; /* Activo */
+  --color-brand-800: #075d4e;
+  --color-brand-900: #044238;
+
+  /* Neutros (ajusta a tu guía si define otros) */
+  --color-neutral-50:  #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+
+  /* ——— Tokens por categoría (ajusta a tus HEX oficiales) ——— */
+  --cat-prelavadores:        #00A7B5;
+  --cat-enjuagues:           #4BA3F5;
+  --cat-desmanchadores:      #EF4444;
+  --cat-multiusos:           #10B981;
+  --cat-aditivos:            #7C3AED;
+  --cat-control-olores:      #F59E0B;
+  --cat-pisos:               #2563EB;
+  --cat-shampoos:            #14B8A6;
+  --cat-desinfectantes:      #0EA5E9;
+  --cat-automotriz:          #334155;
+  --cat-piel-vinilo:         #8B5CF6;
+  --cat-protectores:         #F97316;
+  --cat-complementos:        #A3E635;
+
+  /* Radios y sombras corporativas */
+  --radius-card: 1rem; /* 16px */
+  --shadow-card: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(2,6,23,.06);
+}
+
+/* Cuerpo con tipografía de marca */
+html, body { font-family: var(--font-sans); }
