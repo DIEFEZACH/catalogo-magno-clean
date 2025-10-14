@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import products from "../data/products.json";
 
 /* ☎️ WhatsApp (solo 33; principal primero) */
@@ -194,17 +194,41 @@ function VariantRow({ prod, v, onAdd }) {
 
 function ProductCard({ p, onAdd }) {
   const tone = COLOR_BY_CATEGORY[p.category] || "#1eae93";
-  // Imagen de fallback al nivel de producto (si quieres poner una general)
   const productImage = p.image || (p.variants?.find(v => v.image)?.image) || "";
 
+  // Ref del contenedor con scroll horizontal (solo móvil)
+  const scrollerRef = useRef(null);
+
+  // Pequeño “nudge” para enseñar que se puede deslizar (solo < md)
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el || window.innerWidth >= 768) return;
+    const t1 = setTimeout(() => {
+      el.scrollTo({ left: 50, behavior: "smooth" });
+      const t2 = setTimeout(() => el.scrollTo({ left: 0, behavior: "smooth" }), 700);
+      return () => clearTimeout(t2);
+    }, 400);
+    return () => clearTimeout(t1);
+  }, []);
+
   return (
-    <div className="group rounded-[var(--radius-card)] border bg-white shadow-sm hover:shadow-md transition overflow-hidden" style={{ borderColor: "#e2e8f0" }}>
+    <div
+      className="group rounded-[var(--radius-card)] border bg-white shadow-sm hover:shadow-md transition overflow-hidden"
+      style={{ borderColor: "#e2e8f0" }}
+    >
+      {/* Banda superior del color de la categoría */}
       <div className="h-1 w-full" style={{ backgroundColor: tone }} />
+
       <div className="p-4 md:p-5">
+        {/* Encabezado del producto */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex gap-4">
             {productImage && (
-              <img src={productImage} alt={p.name} className="h-16 w-16 md:h-20 md:w-20 rounded-lg object-cover border border-neutral-200" />
+              <img
+                src={productImage}
+                alt={p.name}
+                className="h-16 w-16 md:h-20 md:w-20 rounded-lg object-cover border border-neutral-200"
+              />
             )}
             <div>
               <h3 className="text-base md:text-lg font-semibold text-neutral-900">{p.name}</h3>
@@ -214,27 +238,52 @@ function ProductCard({ p, onAdd }) {
           <CategoryBadge category={p.category} />
         </div>
 
-        {p.appearance && (<p className="mt-3 text-sm text-neutral-700"><strong>Apariencia:</strong> {p.appearance}</p>)}
-        {p.notes && (<p className="mt-1 text-sm text-neutral-700">{p.notes}</p>)}
+        {p.appearance && (
+          <p className="mt-3 text-sm text-neutral-700">
+            <strong>Apariencia:</strong> {p.appearance}
+          </p>
+        )}
+        {p.notes && <p className="mt-1 text-sm text-neutral-700">{p.notes}</p>}
 
-        <div className="mt-4 overflow-x-auto">
-          <table className="min-w-[680px] w-full text-sm">
-            <thead>
-              <tr className="text-left text-neutral-500">
-                <th className="py-2 pr-3 font-medium">Presentación</th>
-                <th className="py-2 pr-3 font-medium">Código</th>
-                <th className="py-2 pr-3 font-medium">Precio (MXN)</th>
-                <th className="py-2 pr-3 font-medium">Cantidad</th>
-                <th className="py-2 pr-3 font-medium"></th>
-                <th className="py-2 font-medium">Canales</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(p.variants || []).map((v, i) => (
-                <VariantRow key={i} prod={p} v={v} onAdd={onAdd} />
-              ))}
-            </tbody>
-          </table>
+        {/* Tabla de variantes con indicador de desplazamiento */}
+        <div className="mt-4">
+          {/* Hint (solo móvil) */}
+          <p className="md:hidden text-[11px] text-neutral-500 mb-1 pl-0.5">
+            👉 Desliza hacia la derecha para ver opciones y agregar al carrito.
+          </p>
+
+          <div
+            ref={scrollerRef}
+            className="relative overflow-x-auto rounded-lg border border-neutral-100 bg-white shadow-inner md:border-0 md:shadow-none"
+          >
+            
+
+            {/* Etiqueta “Desliza” (solo móvil) */}
+            <div
+              className="pointer-events-none md:hidden absolute inset-y-0 right-0 w-16 flex items-center justify-center"
+              aria-hidden="true"
+            >
+              <span className="text-[11px] font-medium text-neutral-500">← Desliza</span>
+            </div>
+
+            <table className="min-w-[680px] w-full text-sm">
+              <thead>
+                <tr className="text-left text-neutral-500">
+                  <th className="py-2 pr-3 font-medium">Presentación</th>
+                  <th className="py-2 pr-3 font-medium">Código</th>
+                  <th className="py-2 pr-3 font-medium">Precio (MXN)</th>
+                  <th className="py-2 pr-3 font-medium">Cantidad</th>
+                  <th className="py-2 pr-3 font-medium"></th>
+                  <th className="py-2 font-medium">Canales</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(p.variants || []).map((v, i) => (
+                  <VariantRow key={i} prod={p} v={v} onAdd={onAdd} />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
